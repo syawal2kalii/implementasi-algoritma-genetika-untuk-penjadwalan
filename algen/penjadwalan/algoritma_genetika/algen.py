@@ -2,48 +2,68 @@ import random, copy
 from math import ceil, log2
 
 from penjadwalan.algoritma_genetika.classes import *
-
-# tambah angkatan
-Group.groups = [
-    Group("a12018", 30),
-    Group("b12018", 30),
-    Group("a12019", 30),
-    Group("b12019", 30),
-    Group("a12020", 30),
-    Group("b12020", 30),
-    Group("a12021", 30),
-    Group("b12022", 30),
-]
-
-# tambah Mata Kuliah yang di ajar
-Professor.professors = [
-    Professor("Muhammad Arfah Asis, S.Kom.,M.T"),
-    Professor("Ramdaniah, S.Kom.,M.T"),
-    Professor("Erick Irawadi Alwi, S.Kom.,M.Eng"),
-    Professor("Lutfi Budi Ilmawan, S.Kom.,M.Cs"),
-    Professor("Amaliah Faradibah S.Kom.,M.Kom"),
-]
-
-# tambah untuk angkatan berapa
-CourseClass.classes = [
-    CourseClass("ap"),
-    CourseClass("bd"),
-    CourseClass("jarkom"),
-    CourseClass("web"),
-    CourseClass("sti"),
-    CourseClass("str"),
-]
+import penjadwalan.models as db
 
 
-Room.rooms = [Room("lab rpl", 30), Room("lab jarkom", 30)]
+def inisialisasi():
+    # tambah angkatan
+    # Group.groups = [
+    #     Group("a12018", 30),
+    #     Group("b12018", 30),
+    #     Group("a12019", 30),
+    #     Group("b12019", 30),
+    #     Group("a12020", 30),
+    #     Group("b12020", 30),
+    #     Group("a12021", 30),
+    #     Group("b12021", 30),
+    # ]
+    Group.groups = []
+    for group in db.Group.objects.all():
+        Group.groups.append(Group(group.nama_group, int(group.size)))
 
-Slot.slots = [
-    Slot("08:00", "09:40", "jumat"),
-    Slot("09:40", "11:20", "jumat"),
-    Slot("13:00", "14:40", "jumat"),
-    Slot("14:40", "16:20", "jumat"),
-    Slot("16:20", "18:00", "jumat"),
-]
+    # tambah Mata Kuliah yang di ajar
+    Professor.professors = []
+    # Professor.professors = [
+    #     Professor("Muhammad Arfah Asis, S.Kom.,M.T"),
+    #     Professor("Ramdaniah, S.Kom.,M.T"),
+    #     # Professor("Erick Irawadi Alwi, S.Kom.,M.Eng"),
+    #     # Professor("Lutfi Budi Ilmawan, S.Kom.,M.Cs"),
+    #     # Professor("Amaliah Faradibah S.Kom.,M.Kom"),
+    # ]
+
+    for dosen in db.Dosen.objects.all():
+        Professor.professors.append(Professor(dosen.nama_dosen))
+
+    # tambah untuk angkatan berapa
+    # CourseClass.classes = [
+    #     CourseClass("ap"),
+    #     CourseClass("bd"),
+    #     CourseClass("jarkom"),
+    #     CourseClass("web"),
+    #     CourseClass("sti"),
+    #     CourseClass("str"),
+    # ]
+
+    CourseClass.classes = []
+    for course in db.Mata_kuliah.objects.all():
+        CourseClass.classes.append(CourseClass(course.nama_matkul))
+
+    Room.rooms = []
+    for room in db.Ruangan.objects.all():
+        Room.rooms.append(Room(room.nama_ruangan, int(room.kapasitas)))
+    # Room.rooms = [Room("lab rpl", 30), Room("lab jarkom", 30)]
+
+    Slot.slots = []
+    for slot in db.Waktu.objects.all():
+        Slot.slots.append(Slot(slot.mulai, slot.berakhir, slot.hari))
+    # Slot.slots = [
+    #     Slot("08:00", "09:40", "jumat"),
+    #     Slot("09:40", "11:20", "jumat"),
+    #     Slot("13:00", "14:40", "jumat"),
+    #     Slot("14:40", "16:20", "jumat"),
+    #     Slot("16:20", "18:00", "jumat"),
+    # ]
+
 
 max_score = None
 result = None
@@ -442,6 +462,7 @@ def mutate(chromosome):
 def algo():
     print("b")
     generation = 0
+    inisialisasi()
     convert_input_to_bin()
     population = init_population(3)
 
@@ -451,7 +472,7 @@ def algo():
     while True:
 
         # if termination criteria are satisfied, stop.
-        if evaluate(max(population, key=evaluate)) == 1 or generation == 500:
+        if evaluate(max(population, key=evaluate)) == 1 or generation == 5000:
             print("Generations:", generation)
             print(
                 "Best Chromosome fitness value", evaluate(max(population, key=evaluate))

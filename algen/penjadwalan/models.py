@@ -5,38 +5,69 @@ from django.db import models
 
 class Dosen(models.Model):
     nama_dosen = models.CharField(max_length=100)
-    id_dosen = models.CharField(default="", max_length=100)
-    no_hp = models.CharField(default="", max_length=100)
+    id_dosen = models.CharField(null=True, blank=True, max_length=100)
+    no_hp = models.CharField(null=True, blank=True, max_length=100)
 
     def __str__(self):
         return self.nama_dosen
 
 
+class Mata_kuliah(models.Model):
+    nama_matkul = models.CharField(null=True, max_length=100)
+    semester = models.CharField(max_length=50, blank=True)
+    islab = models.CharField(default="0", max_length=2)
+    code = models.CharField(null=True, max_length=50)
+
+    def __str__(self):
+        return self.nama_matkul
+
+
+class Group(models.Model):
+    nama_group = models.CharField(null=True, max_length=100)
+    semester = models.CharField(null=True, max_length=50, blank=True)
+    size = models.CharField(null=True, max_length=50, blank=True)
+
+    def __str__(self):
+        return self.nama_group
+
+
+class Ruangan(models.Model):
+    nama_ruangan = models.CharField(null=True, max_length=100)
+    kapasitas = models.CharField(null=True, blank=True, max_length=5)
+
+    def __str__(self):
+        return self.nama_ruangan
+
+
+class Waktu(models.Model):
+    mulai = models.CharField(null=True, max_length=100)
+    berakhir = models.CharField(null=True, max_length=50)
+    hari = models.CharField(null=True, max_length=50)
+    islab = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.mulai + " " + self.berakhir + " " + self.hari
+
+
 class Asisten(models.Model):
-    nama_asisten = models.CharField(max_length=100, default="")
-    no_hp = models.CharField(default="", max_length=100)
-    nim = models.CharField(default="", max_length=100)
+    nama_asisten = models.CharField(null=True, max_length=100)
+    nim = models.CharField(null=True, blank=True, max_length=50)
 
     def __str__(self):
         return self.nama_asisten
 
 
-class Hari(models.Model):
-    nama_hari = models.CharField(default="", max_length=100)
+class MengajarByDosen(models.Model):
+    id_dosen = models.ForeignKey(Dosen, on_delete=models.CASCADE)
+    id_matkul = models.ForeignKey(Mata_kuliah, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.nama_hari
+        return str(self.id_dosen) + " " + str(self.id_matkul)
 
 
-class Jam(models.Model):
-    keterangan = models.CharField(default="", max_length=100)
-
-    def __str__(self):
-        return self.keterangan
-
-
-class Ruangan(models.Model):
-    nama_ruangan = models.CharField(default="", max_length=100)
+class MengajarByAsisten(models.Model):
+    id_asisten = models.ForeignKey(Asisten, on_delete=models.CASCADE)
+    id_matkul = models.ForeignKey(Mata_kuliah, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.nama_ruangan
+        return str(self.id_asisten) + " " + str(self.id_matkul)
