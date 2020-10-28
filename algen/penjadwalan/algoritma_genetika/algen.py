@@ -164,7 +164,7 @@ def convert_input_to_bin():
                 Group.find(Group.groups[i].name),
             ]
         )
-        print("cpg->input->findid :", cpg)
+        # print("cpg->input->findid :", cpg)
         # cpg->input->findid : [0, 0, 0]
         # cpg->input->findid : [0, 0, 0, 1, 1, 1]
         # cpg->input->findid : [0, 0, 0, 1, 1, 1, 2, 2, 2]
@@ -185,7 +185,7 @@ def convert_input_to_bin():
             # print("else")
             cpg[_c] = (bin(cpg[_c])[2:]).rjust(bits_needed(Group.groups), "0")
             # print("cpg->binary(group) :",cpg[_c])
-    print("cpg->binary :", cpg)
+    # print("cpg->binary :", cpg)
 
     cpg = join_cpg_pair(cpg)
     for r in range(len(Room.rooms)):
@@ -194,8 +194,8 @@ def convert_input_to_bin():
     for t in range(len(Slot.slots)):
         slots.append((bin(t)[2:]).rjust(bits_needed(Slot.slots), "0"))
 
-    print("lts convert", lts)
-    print("slots convert", slots)
+    # print("lts convert", lts)
+    # print("slots convert", slots)
     max_score = (len(cpg) - 1) * 3 + len(cpg) * 3
 
 
@@ -211,9 +211,9 @@ def init_population(n):
         chromosome = []
         for _c in cpg:
             chromosome.append(_c + random.choice(slots) + random.choice(lts))
-            print("chromosone ke ", _n, " =", chromosome)
+            # print("chromosone ke ", _n, " =", chromosome)
         chromosomes.append(chromosome)
-    print("chromosomes :", chromosomes)
+    # print("chromosomes :", chromosomes)
     return chromosomes
 
 
@@ -351,6 +351,15 @@ def appropriate_room(chromosomes):
     return scores
 
 
+# cek professor sesuai dengan matakuliah yang di ajarkan
+# def appropriate_professor_by_course(chromosomes):
+#     scores = 0
+#     for _c in chromosomes:
+#         if(Professor.professors[])
+
+# cek kelas menerima matakuliah sesuai angkatan
+
+
 # check that lab is allocated appropriate time slot
 def appropriate_timeslot(chromosomes):
     scores = 0
@@ -367,11 +376,17 @@ def evaluate(chromosomes):
     global max_score
     score = 0
     score = score + use_spare_classroom(chromosomes)
+    # print("score use spare classroom :", score)
     score = score + faculty_member_one_class(chromosomes)
+    # print("score faculty_member_one_class :", score)
     score = score + classroom_size(chromosomes)
+    # print("classroom_size :", score)
     score = score + group_member_one_class(chromosomes)
+    # print("group_member_one_class :", score)
     score = score + appropriate_room(chromosomes)
+    # print("appropriate_room :", score)
     score = score + appropriate_timeslot(chromosomes)
+    # print("appropriate_timeslot :", score)
     return score / max_score
 
 
