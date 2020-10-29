@@ -7,16 +7,18 @@ from .models import (
     Mata_kuliah,
     Ruangan,
     Waktu,
-    MengajarByDosen,
-    MengajarByAsisten,
+    DosenByMatkul,
+    AsistenByMatkul,
+    GroupByMatkul,
 )
 
 # Register your models here.
 admin.site.register(Asisten)
 admin.site.register(Dosen)
 admin.site.register(Waktu)
-admin.site.register(MengajarByAsisten)
+admin.site.register(GroupByMatkul)
 admin.site.register(Ruangan)
 admin.site.register(Mata_kuliah)
-admin.site.register(MengajarByDosen)
+admin.site.register(DosenByMatkul)
 admin.site.register(Group)
+admin.site.register(AsistenByMatkul)

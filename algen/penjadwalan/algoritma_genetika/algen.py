@@ -1,4 +1,4 @@
-import random, copy
+import random, copy, sys
 from math import ceil, log2
 
 from penjadwalan.algoritma_genetika.classes import *
@@ -65,28 +65,28 @@ import penjadwalan.models as db
 #     # ]
 
 
-Group.groups = []
-for group in db.Group.objects.all():
-    Group.groups.append(Group(group.nama_group, int(group.size)))
+# Group.groups = []
+# for group in db.Group.objects.all():
+#     Group.groups.append(Group(group.nama_group, int(group.size)))
 
-# tambah Mata Kuliah yang di ajar
-Professor.professors = []
+# # tambah Mata Kuliah yang di ajar
+# Professor.professors = []
 
-for dosen in db.Dosen.objects.all():
-    Professor.professors.append(Professor(dosen.nama_dosen))
+# for dosen in db.Dosen.objects.all():
+#     Professor.professors.append(Professor(dosen.nama_dosen))
 
-CourseClass.classes = []
-for course in db.Mata_kuliah.objects.all():
-    CourseClass.classes.append(CourseClass(course.nama_matkul))
+# CourseClass.classes = []
+# for course in db.Mata_kuliah.objects.all():
+#     CourseClass.classes.append(CourseClass(course.nama_matkul))
 
-Room.rooms = []
-for room in db.Ruangan.objects.all():
-    Room.rooms.append(Room(room.nama_ruangan, int(room.kapasitas)))
-    # Room.rooms = [Room("lab rpl", 30), Room("lab jarkom", 30)]
+# Room.rooms = []
+# for room in db.Ruangan.objects.all():
+#     Room.rooms.append(Room(room.nama_ruangan, int(room.kapasitas)))
+#     # Room.rooms = [Room("lab rpl", 30), Room("lab jarkom", 30)]
 
-Slot.slots = []
-for slot in db.Waktu.objects.all():
-    Slot.slots.append(Slot(slot.mulai, slot.berakhir, slot.hari))
+# Slot.slots = []
+# for slot in db.Waktu.objects.all():
+#     Slot.slots.append(Slot(slot.mulai, slot.berakhir, slot.hari))
 
 
 max_score = None
@@ -221,6 +221,7 @@ def convert_input_to_bin():
     # print("lts convert", lts)
     # print("slots convert", slots)
     max_score = (len(cpg) - 1) * 3 + len(cpg) * 3
+    # max_score = 500
 
 
 def init_population(n):
@@ -237,7 +238,7 @@ def init_population(n):
             chromosome.append(_c + random.choice(slots) + random.choice(lts))
             # print("chromosone ke ", _n, " =", chromosome)
         chromosomes.append(chromosome)
-    # print("chromosomes :", chromosomes)
+    print("chromosomes :", chromosomes)
     return chromosomes
 
 
@@ -398,19 +399,22 @@ def appropriate_timeslot(chromosomes):
 
 def evaluate(chromosomes):
     global max_score
+    print("chromosome ", chromosomes)
+    print("max_score :", max_score)
     score = 0
     score = score + use_spare_classroom(chromosomes)
-    # print("score use spare classroom :", score)
+    print("score use spare classroom :", score)
     score = score + faculty_member_one_class(chromosomes)
-    # print("score faculty_member_one_class :", score)
+    print("score faculty_member_one_class :", score)
     score = score + classroom_size(chromosomes)
-    # print("classroom_size :", score)
+    print("classroom_size :", score)
     score = score + group_member_one_class(chromosomes)
-    # print("group_member_one_class :", score)
+    print("group_member_one_class :", score)
     score = score + appropriate_room(chromosomes)
-    # print("appropriate_room :", score)
+    print("appropriate_room :", score)
     score = score + appropriate_timeslot(chromosomes)
-    # print("appropriate_timeslot :", score)
+    print("appropriate_timeslot :", score)
+    # sys.exit()
     return score / max_score
 
 
@@ -499,7 +503,7 @@ def mutate(chromosome):
 
 
 def algo():
-    print("b")
+    print("algoritma genetika")
     generation = 0
     # inisialisasi()
     convert_input_to_bin()
@@ -529,6 +533,7 @@ def algo():
 
         # Otherwise continue
         else:
+            print("nilai fitnes else: ", evaluate(max(population, key=evaluate)))
             for _c in range(len(population)):
                 crossover(population)
                 selection(population, 5)

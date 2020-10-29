@@ -57,7 +57,7 @@ class Asisten(models.Model):
         return self.nama_asisten
 
 
-class MengajarByDosen(models.Model):
+class DosenByMatkul(models.Model):
     id_dosen = models.ForeignKey(Dosen, on_delete=models.CASCADE)
     id_matkul = models.ForeignKey(Mata_kuliah, on_delete=models.CASCADE)
 
@@ -65,9 +65,23 @@ class MengajarByDosen(models.Model):
         return str(self.id_dosen) + " " + str(self.id_matkul)
 
 
-class MengajarByAsisten(models.Model):
+class AsistenByMatkul(models.Model):
     id_asisten = models.ForeignKey(Asisten, on_delete=models.CASCADE)
     id_matkul = models.ForeignKey(Mata_kuliah, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.id_asisten) + " " + str(self.id_matkul)
+
+
+class GroupByMatkul(models.Model):
+    id_group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    id_matkul = models.ForeignKey(Mata_kuliah, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.id_group) + "/t" + str(self.id_matkul)
+
+    class Meta:
+        db_table = ""
+        managed = True
+        verbose_name = "GroupByMatkul"
+        verbose_name_plural = "GroupByMatkul"
