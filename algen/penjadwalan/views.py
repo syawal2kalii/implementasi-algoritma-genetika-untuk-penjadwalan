@@ -16,7 +16,9 @@ import penjadwalan.models as db
 def inisialisasi():
     Group.groups = []
     for group in db.Group.objects.all():
-        Group.groups.append(Group(group.nama_group, int(group.size)))
+        Group.groups.append(
+            Group(group.nama_group, int(group.semester), int(group.size))
+        )
 
     # tambah Mata Kuliah yang di ajar
     Professor.professors = []

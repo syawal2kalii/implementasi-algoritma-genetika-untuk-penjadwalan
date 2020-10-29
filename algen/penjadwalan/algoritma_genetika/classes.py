@@ -1,9 +1,10 @@
 class Group:
     groups = None
 
-    def __init__(self, name, size):
+    def __init__(self, name, semester, size):
         self.name = name
         self.size = size
+        self.semester = semester
 
     @staticmethod
     def find(name):
@@ -55,6 +56,7 @@ class CourseClass:
 
     def __init__(self, code, is_lab=False):
         self.code = code
+        # self.semester = semester
         self.is_lab = is_lab
 
     @staticmethod
